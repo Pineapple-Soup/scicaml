@@ -1,0 +1,4 @@
+(executable
+ (public_name scicaml)
+ (name main)
+ (libraries scicaml))

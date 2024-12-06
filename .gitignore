@@ -1,0 +1,23 @@
+# Compiler artifacts
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+
+# Compilation artificats
+*.byte
+*.native
+
+
+# Editor/System artifacts
+.vscode/
+.DS_Store
+
+# Build artifacts
+_build/
+_opam/
