@@ -2,6 +2,8 @@ type t = float array
 
 let create n value = Array.make n value
 
+let zeroes n = create n 0.0
+
 let size v = Array.length v
 
 let add v1 v2 = 
