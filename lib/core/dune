@@ -1,0 +1,3 @@
+(library
+ (name core)
+ (modules vector matrix))
