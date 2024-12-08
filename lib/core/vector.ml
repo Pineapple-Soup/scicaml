@@ -1,6 +1,6 @@
 type t = float array
 
-let create n ?(value=0.0) = Array.make n value
+let create n value = Array.make n value
 
 let size v = Array.length v
 
