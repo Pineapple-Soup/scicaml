@@ -68,7 +68,6 @@ let variance v =
 let std v =
   sqrt (variance v)
 
-
 (* element operators *)
 (* scalars, norms *)
 (* max, min, argmax, argmin *)

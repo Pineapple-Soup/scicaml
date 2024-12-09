@@ -57,7 +57,7 @@ let matrixmult m1 m2 =
   in
   Array.init nrows1 (fun i -> Array.init ncols2 (fun j -> matrixmult' i j)) 
 
-let vector_mult m v =
+let vector_mult m v  =
   let (nrows, ncols) = shape m in
   if ncols <> Array.length v then
     raise (Invalid_argument "Matrix.vector_mult: matrix and vector must have compatible shapes");

@@ -55,6 +55,7 @@ let test_transpose _ =
   let m' = [|[|1.0; 4.0|]; [|2.0; 5.0|]; [|3.0; 6.0|]|] in
   assert_equal m' (transpose m)
 
+(* let test_ *)
 (* Test Suite *)
 
 let test_suite = "Test Suite for Matrix" >::: [
@@ -67,7 +68,16 @@ let test_suite = "Test Suite for Matrix" >::: [
   "test_sub" >:: test_sub;
   "test_scale" >:: test_scale;
   "test_transpose" >:: test_transpose
-
+  (* 
+  "test_matrixmult" >:: test_matrixmult;
+  "test_vector_mult" >:: test_vector_mult 
+   test_det;
+  "test_decomposition"
+  "test_solver";
+  "test_inverse" >:: test_inverse;
+  
+  
+  *)
 ]
 
 let _ = run_test_tt_main test_suite
