@@ -38,7 +38,7 @@ let sub n m =
 
 let scale m s = Array.map (fun x -> Array.map (fun y -> y *. s) x) m
 
-let tranpose m = 
+let transpose m = 
   let (nrows, ncols) = shape m in
   let transpose' j =
     Array.init nrows (fun i -> m.(i).(j))
