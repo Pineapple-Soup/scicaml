@@ -74,7 +74,7 @@ let append_vector m v axis =
   | _ -> raise (Invalid_argument "Matrix.append_vector: axis must be 0 or 1")
 
 
-let matrixmult m1 m2 =
+let dot m1 m2 =
   let (nrows1, ncols1) = shape m1 in
   let (nrows2, ncols2) = shape m2 in
   if ncols1 <> nrows2 then
@@ -84,6 +84,7 @@ let matrixmult m1 m2 =
       Array.fold_left ( +. ) 0.0 (Array.init ncols1 (fun k -> m1.(i).(k) *. m2.(k).(j)))
     )
   )
+
 let vector_mult m v  =
   let (nrows, ncols) = shape m in
   if ncols <> Array.length v then
