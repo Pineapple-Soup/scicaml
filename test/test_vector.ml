@@ -43,6 +43,14 @@ let test_sub _ =
   assert_equal (-1.0) v.(1);
   assert_equal (-1.0) v.(2) 
 
+let test_sum _ =
+  let v = create 3 1.0 in
+  assert_equal 3.0 (sum v)
+
+let test_prod _ =
+  let v = create 3 2.0 in
+  assert_equal 8.0 (prod v)
+
 let test_scale _ = 
   let v = create 3 2.0 in
   let new_v = scale v 2.0 in
@@ -113,6 +121,8 @@ let test_suite = "Test Suite for Vector" >::: [
   "test_size" >:: test_size;
   "test_add" >:: test_add;
   "test_sub" >:: test_sub;
+  "test_sum" >:: test_sum;
+  "test_prod" >:: test_prod;
   "test_scale" >:: test_scale;
   "test_map" >:: test_map;
   "test_dot" >:: test_dot;
