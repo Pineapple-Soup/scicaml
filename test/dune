@@ -15,3 +15,8 @@
   (name test_dataset)
   (libraries ounit2 core)
   (modules test_dataset))
+
+(test
+  (name test_linear_regression)
+  (libraries ounit2 core linear_model)
+  (modules test_linear_regression))
