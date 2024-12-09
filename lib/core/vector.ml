@@ -7,7 +7,7 @@ let create n value =
 
 let zeroes n = create n 0.0
 
-let ones  n = create n 1.0
+let ones n = create n 1.0
 
 let size v = Array.length v
 
