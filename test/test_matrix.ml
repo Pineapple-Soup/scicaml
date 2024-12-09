@@ -12,6 +12,9 @@ let test_create _ =
   assert_equal 1.0 m.(1).(0);
   assert_equal 1.0 m.(1).(1)
 
+let test_create_negative _ =
+  assert_raises (Invalid_argument "Matrix.create: size must be non-negative") (fun () -> create (-2) 2 1.0)
+
 let test_zeroes _ = 
   let m = zeroes 2 2 in
   assert_equal 2 (Array.length m);
@@ -29,6 +32,7 @@ let test_shape _ =
 
 let test_suite = "Test Suite for Matrix" >::: [
   "test_create" >:: test_create;
+  "test_create_negative" >:: test_create_negative;
   "test_zeroes" >:: test_zeroes;
   "test_shape" >:: test_shape
 ]
