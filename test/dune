@@ -10,4 +10,8 @@
   (name test_matrix)
   (libraries ounit2 core)
   (modules test_matrix))
- 
+
+(test
+  (name test_dataset)
+  (libraries ounit2 core)
+  (modules test_dataset))
