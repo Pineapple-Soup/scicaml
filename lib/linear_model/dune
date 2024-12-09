@@ -1,0 +1,4 @@
+(library
+ (name linear_model)
+ (libraries core)
+ (modules linear_regression))
