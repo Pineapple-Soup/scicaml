@@ -1,6 +1,9 @@
 type t = float array
 
-let create n value = Array.make n value
+let create n value = 
+  if n < 0 then
+    raise (Invalid_argument "Vector.create: size must be non-negative");
+  Array.make n value
 
 let zeroes n = create n 0.0
 
