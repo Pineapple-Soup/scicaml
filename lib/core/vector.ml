@@ -21,6 +21,12 @@ let sub v1 v2 =
     raise (Invalid_argument "Vector.sub: vectors must have the same size");
   Array.map2 ( -. ) v1 v2
 
+let sum v =
+  Array.fold_left ( +. ) 0.0 v
+
+let prod v =
+  Array.fold_left ( *. ) 1.0 v
+
 let scale v s = Array.map(fun x -> x *. s) v
 
 let map func v1 = 
