@@ -47,6 +47,32 @@ let transpose m =
   in
   Array.init ncols (fun j -> transpose' j)
 
+let vstack m1 m2 =
+  let (nrows1, ncols1) = shape m1 in
+  let (nrows2, ncols2) = shape m2 in
+  if ncols1 <> ncols2 then
+    raise (Invalid_argument "Matrix.vstack: matrices must have the same number of columns");
+  Array.init (nrows1 + nrows2) (fun i -> if i < nrows1 then m1.(i) else m2.(i - nrows1))
+
+let hstack m1 m2 =
+  let nrows1 = shape m1 |> fst in
+  let nrows2 = shape m2 |> fst in
+  if nrows1 <> nrows2 then
+    raise (Invalid_argument "Matrix.hstack: matrices must have the same number of rows");
+  Array.init nrows1 (fun i -> Array.append m1.(i) m2.(i))
+
+let append m1 m2 axis = 
+  match axis with
+  | 0 -> vstack m1 m2
+  | 1 -> hstack m1 m2
+  | _ -> raise (Invalid_argument "Matrix.append: axis must be 0 or 1")
+    
+let append_vector m v axis = 
+  match axis with
+  | 0 -> vstack m [|v|]
+  | 1 -> hstack m (transpose [|v|])
+  | _ -> raise (Invalid_argument "Matrix.append_vector: axis must be 0 or 1")
+
 let matrixmult m1 m2 = 
   let (nrows1, ncols1) = shape m1 in
   let (_nrows2, ncols2) = shape m2 in
