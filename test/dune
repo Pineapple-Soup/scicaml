@@ -1,2 +1,7 @@
 (test
  (name test_scicaml))
+
+(test
+  (name test_vector)
+  (libraries ounit2 core)
+  (modules test_vector))
