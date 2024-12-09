@@ -47,16 +47,17 @@ let transpose m =
   in
   Array.init ncols (fun j -> transpose' j)
 
-let matrixmult m1 m2 = 
-  let (nrows1, ncols1) = shape m1 in
-  let (_nrows2, ncols2) = shape m2 in
-  if ncols1 <> _nrows2 then
-    raise (Invalid_argument "Matrix.matrixmult: matrices must have compatible shapes");
-  let matrixmult' i j =
-    Array.fold_left ( +. ) 0.0 (Array.map2 ( *. ) m1.(i) m2.(j))
-  in
-  Array.init nrows1 (fun i -> Array.init ncols2 (fun j -> matrixmult' i j)) 
 
+let matrixmult m1 m2 =
+  let (nrows1, ncols1) = shape m1 in
+  let (nrows2, ncols2) = shape m2 in
+  if ncols1 <> nrows2 then
+    raise (Invalid_argument "Matrix.matrix_mult: matrices must have compatible shapes");
+  Array.init nrows1 (fun i ->
+    Array.init ncols2 (fun j ->
+      Array.fold_left ( +. ) 0.0 (Array.init ncols1 (fun k -> m1.(i).(k) *. m2.(k).(j)))
+    )
+  )
 let vector_mult m v  =
   let (nrows, ncols) = shape m in
   if ncols <> Array.length v then
@@ -73,7 +74,11 @@ let det m =
     | (1, 1) -> m.(0).(0)
     | _ -> 
       let det'' i = 
-        let m' = Array.init (nrows - 1) (fun j -> Array.init (ncols - 1) (fun k -> if k < i then m.(j + 1).(k) else m.(j + 1).(k + 1))) in
+        let m' = Array.init (nrows - 1) (fun j -> 
+          Array.init (ncols - 1) (fun k -> 
+            if k < i then m.(j + 1).(k) else m.(j + 1).(k + 1)
+            )
+          ) in
         m.(0).(i) *. det' m'
       in
       Array.fold_left ( +. ) 0.0 (Array.init ncols (fun i -> if i mod 2 = 0 then det'' i else -. det'' i))
@@ -85,7 +90,7 @@ let det m =
     if nrows <> ncols then
       raise (Invalid_argument "Matrix.crout_lu_decomposition: matrix must be square");
     let lu = zeroes nrows ncols in
-    let perm = Array.init nrows (fun i -> i) in
+    let perm = Array.init nrows (fun i -> float_of_int i) in
     let toggle = ref 1 in
     for i = 0 to nrows - 1 do
       for j = 0 to i do
@@ -151,7 +156,7 @@ let inverse m =
   let lu, perm, _toggle = decomposition m in
   let res = Array.copy m in
   Array.iteri (fun i _row -> 
-    let b = Array.init nrows (fun j -> if i = perm.(j) then 1.0 else 0.0) in
+    let b = Array.init nrows (fun j -> if float_of_int (i) = perm.(j) then 1.0 else 0.0) in
     let x = solver lu b in
     Array.iteri (fun j v -> res.(j).(i) <- v) x
   ) (res);
