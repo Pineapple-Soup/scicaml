@@ -10,7 +10,10 @@ let test_create _ =
   assert_equal 1.0 v.(0);
   assert_equal 1.0 v.(1);
   assert_equal 1.0 v.(2)
-  
+
+let test_create_negative _ =
+  assert_raises (Invalid_argument "Vector.create: size must be non-negative") (fun () -> create (-1) 1.0)
+
 let test_zeroes _ =
   let v = zeroes 3 in
   assert_equal 3 (Array.length v);
@@ -27,6 +30,7 @@ let test_size _ =
 
 let test_suite = "Test Suite for Vector" >::: [
   "test_create" >:: test_create;
+  "test_create_negative" >:: test_create_negative;
   "test_zeroes" >:: test_zeroes;
   "test_size" >:: test_size
 ]
