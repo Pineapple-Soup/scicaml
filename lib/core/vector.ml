@@ -1,10 +1,5 @@
 type t = float array
-
-
 let arr = [|1.0; 2.0; 3.0|]
-
-
-
 let create n value = 
   if n < 0 then
     raise (Invalid_argument "Vector.create: size must be non-negative");

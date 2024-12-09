@@ -18,6 +18,33 @@ let identity m =
 
 let shape m = (Array.length m, Array.length m.(0))
 
+let add n m =
+  if shape n <> shape m then
+    raise (Invalid_argument "Matrix.add: matrices must have the same shape");
+  let (nrows, _ncols) = shape n in
+  let add' i =
+    Array.map2 ( +. ) n.(i) m.(i)
+  in
+  Array.init nrows (fun i -> add' i) (* initalizes new array with each row being sum*)
+
+let sub n m =
+  if shape n <> shape m then
+    raise (Invalid_argument "Matrix.sub: matrices must have the same shape");
+  let (nrows, _ncols) = shape n in
+  let sub' i =
+    Array.map2 ( -. ) n.(i) m.(i)
+  in
+  Array.init nrows (fun i -> sub' i)
+
+let scale m s = Array.map (fun x -> Array.map (fun y -> y *. s) x) m
+
+let tranpose m = 
+  let (nrows, ncols) = shape m in
+  let transpose' j =
+    Array.init nrows (fun i -> m.(i).(j))
+  in
+  Array.init ncols (fun j -> transpose' j)
+
 
 (* determinant *)
 (* inverse, transpose *)
