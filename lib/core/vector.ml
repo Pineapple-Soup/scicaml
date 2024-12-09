@@ -1,10 +1,5 @@
 type t = float array
 
-
-let arr = [|1.0; 2.0; 3.0|]
-
-
-
 let create n value = 
   if n < 0 then
     raise (Invalid_argument "Vector.create: size must be non-negative");
@@ -35,7 +30,6 @@ let dot v1 v2 =
   if Array.length v1 <> Array.length v2 then
     raise (Invalid_argument "Vector.dot: vectors must have the same size");
   Array.fold_left ( +. ) 0.0 (Array.map2 ( *. ) v1 v2)
-
 
 let norm1 v = 
   Array.fold_left ( +. ) 0.0 (Array.map abs_float v)
