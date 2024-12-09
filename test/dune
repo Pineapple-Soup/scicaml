@@ -5,3 +5,9 @@
   (name test_vector)
   (libraries ounit2 core)
   (modules test_vector))
+
+ (test
+  (name test_matrix)
+  (libraries ounit2 core)
+  (modules test_matrix))
+ 
