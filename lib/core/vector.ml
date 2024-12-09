@@ -7,7 +7,7 @@ let create n value =
 
 let zeroes n = create n 0.0
 
-let ones  n = create n 1.0
+let ones n = create n 1.0
 
 let size v = Array.length v
 
@@ -20,6 +20,12 @@ let sub v1 v2 =
   if Array.length v1 <> Array.length v2 then
     raise (Invalid_argument "Vector.sub: vectors must have the same size");
   Array.map2 ( -. ) v1 v2
+
+let sum v =
+  Array.fold_left ( +. ) 0.0 v
+
+let prod v =
+  Array.fold_left ( *. ) 1.0 v
 
 let scale v s = Array.map(fun x -> x *. s) v
 
@@ -47,38 +53,26 @@ let min v =
   Array.fold_left min v.(0) v
 
 let argmax v = 
-  let rec argmax' i max_i max_v = 
-    if i = Array.length v then
-      max_i
-    else if v.(i) > max_v then
-      argmax' (i + 1) i v.(i)
-    else
-      argmax' (i + 1) max_i max_v
-  in
-  argmax' 0 0 v.(0)
+  Array.fold_left 
+    (fun (max_i, max_v) (i, v_i) -> if v_i > max_v then (i, v_i) else (max_i, max_v)) 
+    (0, v.(0)) 
+    (Array.mapi (fun i x -> (i, x)) v) |> fst
 
-let argmin v = 
-  let rec argmin' i min_i min_v = 
-    if i = Array.length v then
-      min_i
-    else if v.(i) > min_v then
-      argmin' (i + 1) i v.(i)
-    else
-      argmin' (i + 1) min_i min_v
-  in
-  argmin' 0 0 v.(0)
+let argmin v =
+  Array.fold_left 
+    (fun (min_i, min_v) (i, v_i) -> if v_i < min_v then (i, v_i) else (min_i, min_v)) 
+    (0, v.(0)) 
+    (Array.mapi (fun i x -> (i, x)) v) |> fst
 
 let mean v = 
   (Array.fold_left ( +. ) 0.0 v) /. (float_of_int (Array.length v))
 
 let variance v = 
   let m = mean v in
-  let n = float_of_int (Array.length v) in
-  (Array.fold_left (fun acc x -> acc +. (x -. m) ** 2.0) 0.0 v) /. n
+  (Array.fold_left (fun acc x -> acc +. (x -. m) ** 2.0) 0.0 v) /. (size v |> float_of_int)
 
 let std v =
   sqrt (variance v)
-
 
 (* element operators *)
 (* scalars, norms *)
