@@ -88,42 +88,7 @@ let test_append_vector _ =
   assert_equal (create 2 4 1.0) m'
 
 
-let test_matrixmult _ =
-  let m1 = [|[|1.0;2.0;3.0;4.0|]; [|5.0;6.0;8.0;9.0|]; [|13.0;2.0;1.0;4.0|]|] in
-  let m2 = [|[|1.0;2.0;3.0|]; [|4.0;5.0;6.0|]; [|7.0;8.0;9.0|]; [|10.0;11.0;12.0|]|] in
-  let m3 = [|[|70.0;80.0;90.0|]; [|175.0;203.0;231.0;|]; [|68.0;88.0;108.0;|]|] in
-  assert_equal m3 (matrixmult m1 m2)
 (* Test Suite *)
-let test_vector_mult _ = 
-  let m = [|[|1.0; 2.0; 3.0|]; [|4.0; 5.0; 6.0|]; [|7.0; 8.0; 9.0|]|] in
-  let v = [|1.0; 2.0; 3.0|] in
-  let v' = [|14.0; 32.0; 50.0|] in
-  assert_equal v' (vector_mult m v)
-
-let test_det _ =
-  let m = [|[|1.0; 3.0; 5.0|]; [|2.0; 4.0; 6.0|]; [|2.0; 3.0; 8.0|]|] in
-  let ans = -4.0 in 
-  assert_equal ans (det m)
-
-let test_decomposition _ =
-  let m = [|[|2.0;7.0;1.0|];[|3.0;-2.0;0.0|];[|1.0;5.0;3.0|]|] in
-  let (lu, _perm, _toggle) = decomposition m in
-  let res = [|[|2.0;7.0;1.0|];[|0.0;-12.5;-1.5|];[|0.0;0.0;2.32|]|]in
-  assert_equal res lu
-
-let test_solver _ = 
-  let m = [|[|7.0;0.7;0.43|];[|2.0;-0.4;-12.0|];[|1.0;1.3;18.0|]|] in 
-  let b = [|1.0; 2.0; 3.0|] in
-  let ans = [|-1.0;(4.0/.3.0);(4.0/.9.0)|] in
-  assert_equal ans (solver m b)
-
-let test_inverse _ = 
-  let m = [|[|1.0;3.0;4.0|]; [|2.0;6.0;3.0|]; [|3.0;5.0;1.0|]|]in
-  let res = [|[|9.0/.20.0; -17.0/.20.0;3.0/.4.0|];[|-7.0/.20.0;11.0/.20.0;-1.0/.4.0;|];[|2.0/.5.0;-1.0/.5.0;0.0|]|] in
-  assert_equal res (inverse m)
-
-
-
 
 let test_suite = "Test Suite for Matrix" >::: [
   "test_create" >:: test_create;
@@ -134,16 +99,16 @@ let test_suite = "Test Suite for Matrix" >::: [
   "test_add" >:: test_add;
   "test_sub" >:: test_sub;
   "test_scale" >:: test_scale;
-  "test_transpose" >:: test_transpose
-  (* 
-  "test_matrixmult" >:: test_matrixmult;
-
+  "test_transpose" >:: test_transpose;
+  "test_vstack" >:: test_vstack;
+  "test_hstack" >:: test_hstack;
+  "test_append" >:: test_append;
+  "test_append_vector" >:: test_append_vector;
+  (* "test_dot" >:: test_dot;
   "test_vector_mult" >:: test_vector_mult;
-  "test_det" >:: test_det;
   "test_decomposition" >:: test_decomposition;
   "test_solver" >:: test_solver;
-  "test_inverse" >:: test_inverse;
-
+  "test_inverse" >:: test_inverse *)
 ]
 
 let _ = run_test_tt_main test_suite
