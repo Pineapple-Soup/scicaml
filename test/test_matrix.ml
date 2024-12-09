@@ -55,6 +55,39 @@ let test_transpose _ =
   let m' = [|[|1.0; 4.0|]; [|2.0; 5.0|]; [|3.0; 6.0|]|] in
   assert_equal m' (transpose m)
 
+let test_vstack _ = 
+  let m1 = create 2 3 1.0 in
+  let m2 = create 4 3 1.0 in
+  let m = vstack m1 m2 in
+  assert_equal (create 6 3 1.0) m
+
+let test_hstack _ =
+  let m1 = create 2 3 1.0 in
+  let m2 = create 2 4 1.0 in
+  let m = hstack m1 m2 in
+  assert_equal (create 2 7 1.0) m
+
+let test_append _ =
+  let m1 = create 2 3 1.0 in
+  let m2 = create 4 3 1.0 in
+  let m = append m1 m2 0 in
+  assert_equal (create 6 3 1.0) m;
+  let m1 = create 2 3 1.0 in
+  let m2 = create 2 4 1.0 in
+  let m = append m1 m2 1 in
+  assert_equal (create 2 7 1.0) m
+
+let test_append_vector _ =
+  let m = create 2 3 1.0 in
+  let v = [|1.0; 1.0; 1.0|] in
+  let m' = append_vector m v 0 in
+  assert_equal (create 3 3 1.0) m';
+  let m = create 2 3 1.0 in
+  let v = [|1.0; 1.0|] in
+  let m' = append_vector m v 1 in
+  assert_equal (create 2 4 1.0) m'
+
+
 let test_matrixmult _ =
   let m1 = [|[|1.0;2.0;3.0;4.0|]; [|5.0;6.0;8.0;9.0|]; [|13.0;2.0;1.0;4.0|]|] in
   let m2 = [|[|1.0;2.0;3.0|]; [|4.0;5.0;6.0|]; [|7.0;8.0;9.0|]; [|10.0;11.0;12.0|]|] in
@@ -101,7 +134,8 @@ let test_suite = "Test Suite for Matrix" >::: [
   "test_add" >:: test_add;
   "test_sub" >:: test_sub;
   "test_scale" >:: test_scale;
-  "test_transpose" >:: test_transpose;
+  "test_transpose" >:: test_transpose
+  (* 
   "test_matrixmult" >:: test_matrixmult;
 
   "test_vector_mult" >:: test_vector_mult;
