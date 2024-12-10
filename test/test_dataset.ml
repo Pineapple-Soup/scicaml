@@ -37,7 +37,7 @@ let test_standardize _ =
   assert_equal dataset.labels dataset'.labels
 
 (* Test Suite *)
-let test_suite = "Dataset tests" >::: [
+let test_suite = "Test Suite for Dataset" >::: [
   "test_create" >:: test_create;
   "test_create_invalid" >:: test_create_invalid;
   "test_shape" >:: test_shape;
