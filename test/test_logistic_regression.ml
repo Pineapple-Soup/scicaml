@@ -24,7 +24,7 @@ let test_predict _ =
   assert_equal (LogisticRegression.sigmoid (-9.)) prediction.(2)
   
 (* Test Suite *)
-let test_suite = "Logistic Regression tests" >::: [
+let test_suite = "Test Suite for Logistic Regression" >::: [
   "test_init" >:: test_init;
   "test_sigmoid" >:: test_sigmoid;
   "test_predict" >:: test_predict

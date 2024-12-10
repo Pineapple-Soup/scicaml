@@ -42,7 +42,7 @@ let test_gradient _ =
   assert_equal 3.0 grad_bias
 
 (* Test Suite *)
-let test_suite = "Linear Regression tests" >::: [
+let test_suite = "Test Suite for Linear Regression" >::: [
   "test_init" >:: test_init;
   "test_predict" >:: test_predict;
   "test_quadratic_loss" >:: test_quadratic_loss;
