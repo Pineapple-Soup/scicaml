@@ -7,6 +7,15 @@ let create n m value =
 
 let zeroes n m = create n m 0.0
 
+let print m =
+  print_newline ();
+  Array.iter (fun row ->
+    Array.iter (fun elem ->
+      Printf.printf "%f " elem  (* Print each element in the row *)
+    ) row;
+    print_newline ()  (* Move to the next line after each row *)
+  ) m
+
 let copy m = Array.map Array.copy m
 
 let ones n m = create n m 1.0
@@ -91,65 +100,63 @@ let vector_mult m v  =
   Array.init nrows (fun i -> Array.fold_left ( +. ) 0.0 (Array.map2 ( *. ) m.(i) v))
 
 
+
+
+
+let decomposition (m: t) =
+  let (nrows, ncols) = shape m in
+  if nrows <> ncols then
+    raise (Invalid_argument "Matrix.crout_lu_decomposition: matrix must be square");
+  let lu = copy m in
+  let perm = Array.init nrows (fun i -> float_of_int i) in
+  let toggle = ref 1 in
+  for j = 0 to nrows -2 do
+    let max = ref (abs_float(lu.(j).(j))) in 
+    let piv = ref j in 
+    for i = j + 1 to nrows-1 do
+      let temp = abs_float(lu.(i).(j)) in 
+      if temp > !max then (
+        max := temp;
+        piv := i
+      )
+    done;
+    if !piv <> j then (
+      for k = 0 to nrows - 1 do
+        let xij = lu.(!piv).(k) in 
+        lu.(!piv).(k) <- lu.(j).(k);
+        lu.(j).(k) <- xij
+      done;
+      let xij = perm.(!piv) in 
+      perm.(!piv) <- perm.(j);
+      perm.(j) <- xij;
+      toggle := - !toggle
+    );
+    let xjj = lu.(j).(j) in
+    if abs_float xjj > 1.0e-10 then
+      for i = j + 1 to nrows-1 do
+        let xij = lu.(i).(j) /. xjj in
+        lu.(i).(j) <- xij;
+        for k = j + 1 to nrows-1 do
+          lu.(i).(k) <- lu.(i).(k) -. xij *. lu.(j).(k)
+        done
+      done
+  done;
+  (lu, perm, !toggle)
+
+
 let det m = 
   let (nrows, ncols) = shape m in
   if nrows <> ncols then
     raise (Invalid_argument "Matrix.det: matrix must be square");
-  let rec det' m = 
-    match shape m with
-    | (1, 1) -> m.(0).(0)
-    | _ -> 
-      let det'' i = 
-        let m' = Array.init (nrows - 1) (fun j -> 
-          Array.init (ncols - 1) (fun k -> 
-            if k < i then m.(j + 1).(k) else m.(j + 1).(k + 1)
-            )
-          ) in
-        m.(0).(i) *. det' m'
-      in
-      Array.fold_left ( +. ) 0.0 (Array.init ncols (fun i -> if i mod 2 = 0 then det'' i else -. det'' i))
-  in
-  det' m
+  let lu, _perm, toggle = decomposition m in
+  let det = ref (float_of_int toggle) in
+  for i = 0 to nrows - 1 do
+    det := !det *. lu.(i).(i)
+  done;
+  !det 
 
-  let decomposition m =
-    let (nrows, ncols) = shape m in
-    if nrows <> ncols then
-      raise (Invalid_argument "Matrix.crout_lu_decomposition: matrix must be square");
-    let lu = zeroes nrows ncols in
-    let perm = Array.init nrows (fun i -> float_of_int i) in
-    let toggle = ref 1 in
-    for i = 0 to nrows - 1 do
-      for j = 0 to i do
-        let sum = ref m.(j).(i) in
-        for k = 0 to j - 1 do
-          sum := !sum -. lu.(j).(k) *. lu.(k).(i)
-        done;
-        lu.(j).(i) <- !sum
-      done;
-      let pivot = ref i in
-      for j = i + 1 to nrows - 1 do
-        let sum = ref m.(j).(i) in
-        for k = 0 to i - 1 do
-          sum := !sum -. lu.(j).(k) *. lu.(k).(i)
-        done;
-        lu.(j).(i) <- !sum;
-        if abs_float lu.(j).(i) > abs_float lu.(!pivot).(i) then
-          pivot := j
-      done;
-      if !pivot <> i then begin
-        let temp = lu.(i) in
-        lu.(i) <- lu.(!pivot);
-        lu.(!pivot) <- temp;
-        let temp = perm.(i) in
-        perm.(i) <- perm.(!pivot);
-        perm.(!pivot) <- temp;
-        toggle := - !toggle
-      end;
-      for j = i + 1 to nrows - 1 do
-        lu.(j).(i) <- lu.(j).(i) /. lu.(i).(i)
-      done
-    done;
-    (lu, perm, !toggle)
+
+
 
 let solver lu b = 
   let (nrows, ncols) = shape lu in 
@@ -157,9 +164,9 @@ let solver lu b =
     raise (Invalid_argument "Matrix.solver: matrix must be square");
   let x = Array.copy b in
     (* forward sub  Ly=b*)
-  for i = 0 to nrows - 1 do
+  for i = 1 to nrows - 1 do
     let sum = ref x.(i) in
-    for j = 0 to i do
+    for j = 0 to i-1 do
       sum := !sum -. lu.(i).(j) *. x.(j)
     done;
   done;

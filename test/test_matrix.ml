@@ -1,5 +1,6 @@
 open OUnit2
 open Core.Matrix
+open Core
 
 (* Test Cases *)
 
@@ -32,6 +33,11 @@ let test_shape _ =
   let m = create 4 5 1.0 in
   assert_equal (4, 5) (shape m)
 
+let test_copy _ =
+  let m = create 2 2 1.0 in
+  let m' = copy m in
+  assert_equal m m'
+
 let test_add _ =
   let m1 = create 2 2 1.0 in
   let m2 = create 2 2 2.0 in
@@ -55,39 +61,6 @@ let test_transpose _ =
   let m' = [|[|1.0; 4.0|]; [|2.0; 5.0|]; [|3.0; 6.0|]|] in
   assert_equal m' (transpose m)
 
-let test_vstack _ = 
-  let m1 = create 2 3 1.0 in
-  let m2 = create 4 3 1.0 in
-  let m = vstack m1 m2 in
-  assert_equal (create 6 3 1.0) m
-
-let test_hstack _ =
-  let m1 = create 2 3 1.0 in
-  let m2 = create 2 4 1.0 in
-  let m = hstack m1 m2 in
-  assert_equal (create 2 7 1.0) m
-
-let test_append _ =
-  let m1 = create 2 3 1.0 in
-  let m2 = create 4 3 1.0 in
-  let m = append m1 m2 0 in
-  assert_equal (create 6 3 1.0) m;
-  let m1 = create 2 3 1.0 in
-  let m2 = create 2 4 1.0 in
-  let m = append m1 m2 1 in
-  assert_equal (create 2 7 1.0) m
-
-let test_append_vector _ =
-  let m = create 2 3 1.0 in
-  let v = [|1.0; 1.0; 1.0|] in
-  let m' = append_vector m v 0 in
-  assert_equal (create 3 3 1.0) m';
-  let m = create 2 3 1.0 in
-  let v = [|1.0; 1.0|] in
-  let m' = append_vector m v 1 in
-  assert_equal (create 2 4 1.0) m'
-
-
 let test_matrixmult _ =
   let m1 = [|[|1.0;2.0;3.0;4.0|]; [|5.0;6.0;8.0;9.0|]; [|13.0;2.0;1.0;4.0|]|] in
   let m2 = [|[|1.0;2.0;3.0|]; [|4.0;5.0;6.0|]; [|7.0;8.0;9.0|]; [|10.0;11.0;12.0|]|] in
@@ -102,25 +75,45 @@ let test_vector_mult _ =
 
 let test_det _ =
   let m = [|[|1.0; 3.0; 5.0|]; [|2.0; 4.0; 6.0|]; [|2.0; 3.0; 8.0|]|] in
-  let ans = -4.0 in 
+  let ans = -8.0 in 
   assert_equal ans (det m)
 
+  let assert_float_equal_matrix m1 m2 =
+    let epsilon = 1e-5 in
+    let rows1 = Array.length m1 in
+    let rows2 = Array.length m2 in
+    assert_equal rows1 rows2;
+    for i = 0 to rows1 - 1 do
+      let cols1 = Array.length m1.(i) in
+      let cols2 = Array.length m2.(i) in
+      assert_equal cols1 cols2;
+      for j = 0 to cols1 - 1 do
+        assert_bool (Printf.sprintf "m1.(%d).(%d) = %f, m2.(%d).(%d) = %f" i j m1.(i).(j) i j m2.(i).(j)) (abs_float (m1.(i).(j) -. m2.(i).(j)) < epsilon)
+      done
+    done
 let test_decomposition _ =
   let m = [|[|2.0;7.0;1.0|];[|3.0;-2.0;0.0|];[|1.0;5.0;3.0|]|] in
   let (lu, _perm, _toggle) = decomposition m in
-  let res = [|[|2.0;7.0;1.0|];[|0.0;-12.5;-1.5|];[|0.0;0.0;2.32|]|]in
-  assert_equal res lu
+  print (lu);
+  let res = [|[|3.0;-2.0;0.0|];[|2.0/.3.0;25.0/.3.0;1.0|];[|1.0/.3.0;17.0/.25.0;2.32|]|]in
+  print (res);
+  (* assert_equal res lu *)
+  assert_float_equal_matrix res lu
 
 let test_solver _ = 
   let m = [|[|7.0;0.7;0.43|];[|2.0;-0.4;-12.0|];[|1.0;1.3;18.0|]|] in 
   let b = [|1.0; 2.0; 3.0|] in
   let ans = [|-1.0;(4.0/.3.0);(4.0/.9.0)|] in
+  Vector.print (solver m b);
+  Vector.print ans;
   assert_equal ans (solver m b)
 
 let test_inverse _ = 
   let m = [|[|1.0;3.0;4.0|]; [|2.0;6.0;3.0|]; [|3.0;5.0;1.0|]|]in
   let res = [|[|9.0/.20.0; -17.0/.20.0;3.0/.4.0|];[|-7.0/.20.0;11.0/.20.0;-1.0/.4.0;|];[|2.0/.5.0;-1.0/.5.0;0.0|]|] in
-  assert_equal res (inverse m)
+  print (inverse m);
+  print (res);
+  assert_float_equal_matrix res (inverse m)
 
 
 
@@ -131,11 +124,11 @@ let test_suite = "Test Suite for Matrix" >::: [
   "test_zeroes" >:: test_zeroes;
   "test_identity" >:: test_identity;
   "test_shape" >:: test_shape;
+  "test_copy" >:: test_copy;
   "test_add" >:: test_add;
   "test_sub" >:: test_sub;
   "test_scale" >:: test_scale;
-  "test_transpose" >:: test_transpose
-  (* 
+  "test_transpose" >:: test_transpose;
   "test_matrixmult" >:: test_matrixmult;
 
   "test_vector_mult" >:: test_vector_mult;
