@@ -22,14 +22,7 @@ module LinearRegression = struct
     let weights = Matrix.vector_mult x_t_x_inv x_t_y in
     (* Extract bias from weights *)
     model.bias <- weights.(Vector.size weights - 1);
-    model.weights <- Array.sub weights 0 (Vector.size weights - 1)
-  
-  let score model x y =
-    let y_pred = predict model x in
-    let y_mean = Vector.mean y in
-    let ss_res = Vector.norm2 (Vector.sub y y_pred) in
-    let ss_tot = Vector.norm2 (Vector.sub y (Vector.create (Vector.size y) y_mean)) in
-    1.0 -. (ss_res /. ss_tot)
+    model.weights <- Array.sub weights 0 (Vector.size weights - 1) 
   
   let quadratic_loss model x y =
     let y_pred = predict model x in
