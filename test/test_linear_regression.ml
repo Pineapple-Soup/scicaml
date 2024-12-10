@@ -15,14 +15,6 @@ let test_predict _ =
   let x = [| [| 1.0; 1.0; 1.0 |]; [|2.0; 2.0; 2.0|]; [|3.0; 3.0; 3.0|] |] in
   assert_equal [|7.0; 13.0; 19.0|] (LinearRegression.predict model x)
 
-(* let test_score _ =
-  let model = LinearRegression.init 3 in
-  model.weights <- [| 2.0; 2.0; 2.0 |];
-  model.bias <- 1.0;
-  let x = [| [| 1.0; 1.0; 1.0 |]; [|2.0; 2.0; 2.0|]; [|3.0; 3.0; 3.0|] |] in
-  let y = [| 8.0; 14.0; 20.0 |] in
-  assert_equal 1.0 (LinearRegression.score model x y) ~printer:string_of_float *)
-
 let test_quadratic_loss _ =
   let model = LinearRegression.init 3 in
   model.weights <- [| 2.0; 2.0; 2.0 |];
@@ -53,7 +45,6 @@ let test_gradient _ =
 let test_suite = "Linear Regression tests" >::: [
   "test_init" >:: test_init;
   "test_predict" >:: test_predict;
-  (* "test_score" >:: test_score; *)
   "test_quadratic_loss" >:: test_quadratic_loss;
   "test_mse" >:: test_mse;
   "test_gradient" >:: test_gradient
