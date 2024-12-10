@@ -20,3 +20,8 @@
   (name test_linear_regression)
   (libraries ounit2 core linear_model)
   (modules test_linear_regression))
+
+(test
+  (name test_logistic_regression)
+  (libraries ounit2 core linear_model)
+  (modules test_logistic_regression))
