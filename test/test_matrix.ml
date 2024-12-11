@@ -1,6 +1,6 @@
 open OUnit2
 open Core.Matrix
-open Core
+(* open Core *)
 
 (* Test Cases *)
 
@@ -63,7 +63,39 @@ let test_transpose _ =
   let m' = [|[|1.0; 4.0|]; [|2.0; 5.0|]; [|3.0; 6.0|]|] in
   assert_equal m' (transpose m)
 
-(* Test Suite *)
+let test_vstack _ = 
+  let m1 = create 2 3 1.0 in
+  let m2 = create 4 3 1.0 in
+  let m = vstack m1 m2 in
+  assert_equal (create 6 3 1.0) m
+
+let test_hstack _ =
+  let m1 = create 2 3 1.0 in
+  let m2 = create 2 4 1.0 in
+  let m = hstack m1 m2 in
+  assert_equal (create 2 7 1.0) m
+
+let test_append _ =
+  let m1 = create 2 3 1.0 in
+  let m2 = create 4 3 1.0 in
+  let m = append m1 m2 0 in
+  assert_equal (create 6 3 1.0) m;
+  let m1 = create 2 3 1.0 in
+  let m2 = create 2 4 1.0 in
+  let m = append m1 m2 1 in
+  assert_equal (create 2 7 1.0) m
+
+let test_append_vector _ =
+  let m = create 2 3 1.0 in
+  let v = [|1.0; 1.0; 1.0|] in
+  let m' = append_vector m v 0 in
+  assert_equal (create 3 3 1.0) m';
+  let m = create 2 3 1.0 in
+  let v = [|1.0; 1.0|] in
+  let m' = append_vector m v 1 in
+  assert_equal (create 2 4 1.0) m'
+
+
 let test_vector_mult _ = 
   let m = [|[|1.0; 2.0; 3.0|]; [|4.0; 5.0; 6.0|]; [|7.0; 8.0; 9.0|]|] in
   let v = [|1.0; 2.0; 3.0|] in
@@ -97,7 +129,13 @@ let assert_float_equal_array a1 a2 =
   for i = 0 to len1 - 1 do
     assert_bool (Printf.sprintf "a1.(%d) = %f, a2.(%d) = %f" i a1.(i) i a2.(i)) (abs_float (a1.(i) -. a2.(i)) < epsilon)
   done
-  
+
+let test_dot _ =
+  let m1 = [|[|1.0;2.0;3.0;4.0|]; [|5.0;6.0;8.0;9.0|]; [|13.0;2.0;1.0;4.0|]|] in
+  let m2 = [|[|1.0;2.0;3.0|]; [|4.0;5.0;6.0|]; [|7.0;8.0;9.0|]; [|10.0;11.0;12.0|]|] in
+  let m3 = [|[|70.0;80.0;90.0|]; [|175.0;203.0;231.0;|]; [|68.0;88.0;108.0;|]|] in
+  assert_float_equal_matrix m3 (dot m1 m2)
+
 let test_decomposition _ =
   let m = [|[|2.0;7.0;1.0|];[|3.0;-2.0;0.0|];[|1.0;5.0;3.0|]|] in
   let (lu, _perm, _toggle) = decomposition m in
@@ -140,14 +178,12 @@ let test_suite = "Test Suite for Matrix" >::: [
   "test_hstack" >:: test_hstack;
   "test_append" >:: test_append;
   "test_append_vector" >:: test_append_vector;
-  (* "test_dot" >:: test_dot;
-  "test_transpose" >:: test_transpose;
-  "test_matrixmult" >:: test_matrixmult;
-
+  "test_det" >:: test_det;
+  "test_dot" >:: test_dot;
   "test_vector_mult" >:: test_vector_mult;
   "test_decomposition" >:: test_decomposition;
   "test_solver" >:: test_solver;
-  "test_inverse" >:: test_inverse *)
+  "test_inverse" >:: test_inverse 
 ]
 
 let _ = run_test_tt_main test_suite
