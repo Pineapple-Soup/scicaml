@@ -36,14 +36,23 @@ let test_standardize _ =
   assert_equal features' dataset'.features;
   assert_equal dataset.labels dataset'.labels
 
+let test_from_csv _ =
+  let dataset = Dataset.from_csv "../../../test/test_data.csv" 3 in
+  let ((row, col), label_shape) = Dataset.shape dataset in
+  assert_equal (10, 3) (row, col);
+  assert_equal 10 label_shape;
+  assert_equal [| 0.; 0.; 1.; 1.; 2.; 2.; 2.; 0.; 2.; 0.|] dataset.labels;
+  assert_equal [| 5.1; 3.5; 1.4 |] dataset.features.(0)
+  
+
 (* Test Suite *)
 let test_suite = "Test Suite for Dataset" >::: [
   "test_create" >:: test_create;
   "test_create_invalid" >:: test_create_invalid;
   "test_shape" >:: test_shape;
   "test_describe" >:: test_describe;
-  "test_standardize" >:: test_standardize
-
+  "test_standardize" >:: test_standardize;
+  "test_from_csv" >:: test_from_csv
 ]
 
 let _ = run_test_tt_main test_suite
