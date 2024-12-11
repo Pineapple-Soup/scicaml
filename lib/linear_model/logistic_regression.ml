@@ -13,7 +13,7 @@ module LogisticRegression = struct
 
   let predict model x =
     let bias_vector = Vector.create (Array.length x) model.bias in
-    Vector.map sigmoid (Vector.add (Matrix.vector_mult x model.weights) bias_vector) in
+    Vector.map sigmoid (Vector.add (Matrix.vector_mult x model.weights) bias_vector) 
 
   let logistic_loss model x y =
     let y_pred = predict model x in

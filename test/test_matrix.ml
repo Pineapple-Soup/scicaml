@@ -139,9 +139,9 @@ let test_dot _ =
 let test_decomposition _ =
   let m = [|[|2.0;7.0;1.0|];[|3.0;-2.0;0.0|];[|1.0;5.0;3.0|]|] in
   let (lu, _perm, _toggle) = decomposition m in
-  print (lu);
+  (* print (lu); *)
   let res = [|[|3.0;-2.0;0.0|];[|2.0/.3.0;25.0/.3.0;1.0|];[|1.0/.3.0;17.0/.25.0;2.32|]|]in
-  print (res);
+  (* print (res); *)
   (* assert_equal res lu *)
   assert_float_equal_matrix res lu
 
