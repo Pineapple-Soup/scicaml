@@ -85,6 +85,11 @@ let append_vector m v axis =
   | 1 -> hstack m (transpose [|v|])
   | _ -> raise (Invalid_argument "Matrix.append_vector: axis must be 0 or 1")
 
+let drop m i axis =
+  match axis with
+  | 0 -> Array.init (Array.length m - 1) (fun j -> if j < i then m.(j) else m.(j + 1))
+  | 1 -> Array.init (Array.length m) (fun j -> Array.init (Array.length m.(0) - 1) (fun k -> if k < i then m.(j).(k) else m.(j).(k + 1)))
+  | _ -> raise (Invalid_argument "Matrix.drop: axis must be 0 or 1")
 
 let dot m1 m2 =
   let (nrows1, ncols1) = shape m1 in
