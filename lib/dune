@@ -1,3 +1,3 @@
 (library
  (name scicaml)
- (libraries core))
+ (libraries core linear_model))
