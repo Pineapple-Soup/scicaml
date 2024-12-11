@@ -11,6 +11,13 @@ let ones  n = create n 1.0
 
 let size v = Array.length v
 
+(* Deep copy, can't just use Array.copy *)
+let copy v = 
+  let v' = create (size v) 0.0 in
+  Array.iteri (fun i x -> v'.(i) <- x) v;
+  v'
+  (* Array.map (fun x -> x) v *)
+
 let print v=
   Array.iter (fun elem -> Printf.printf "%f " elem) v;
   print_newline ()

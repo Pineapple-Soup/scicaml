@@ -1,4 +1,7 @@
 type t = float array array
+module Vector = struct
+  include Vector
+end
 
 let create n m value = 
   if n < 0 || m < 0 then
@@ -15,8 +18,8 @@ let print m =
     ) row;
     print_newline ()  (* Move to the next line after each row *)
   ) m
-
-let copy m = Array.map Array.copy m
+(* Deep copy *)
+let copy m = Array.map Vector.copy m
 
 let ones n m = create n m 1.0
 
@@ -159,18 +162,18 @@ let det m =
 
 
 let solver lu b = 
-  let (nrows, ncols) = shape lu in 
-  if nrows <> ncols then
-    raise (Invalid_argument "Matrix.solver: matrix must be square");
-  let x = Array.copy b in
+  let (nrows,_ncols) = shape lu in 
+  (* if nrows <> ncols then
+    raise (Invalid_argument "Matrix.solver: matrix must be square"); *)
+  let x = Vector.copy b in
     (* forward sub  Ly=b*)
   for i = 1 to nrows - 1 do
     let sum = ref x.(i) in
     for j = 0 to i-1 do
       sum := !sum -. lu.(i).(j) *. x.(j)
     done;
+    x.(i) <- !sum
   done;
-
   x.(nrows-1) <- x.(nrows-1) /. lu.(nrows-1).(nrows-1);
   (* Backward sub Ux=y *)
   for i = nrows - 2 downto 0 do
@@ -187,7 +190,8 @@ let inverse m =
   if nrows <> ncols then
     raise (Invalid_argument "Matrix.inverse: matrix must be square");
   let lu, perm, _toggle = decomposition m in
-  let res = Array.copy m in
+  let res = copy m in
+  (* let res = zeroes nrows nrows in *)
   Array.iteri (fun i _row -> 
     let b = Array.init nrows (fun j -> if float_of_int (i) = perm.(j) then 1.0 else 0.0) in
     let x = solver lu b in
