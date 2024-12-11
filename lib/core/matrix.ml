@@ -108,10 +108,6 @@ let vector_mult m v  =
     raise (Invalid_argument "Matrix.vector_mult: matrix and vector must have compatible shapes");
   Array.init nrows (fun i -> Array.fold_left ( +. ) 0.0 (Array.map2 ( *. ) m.(i) v))
 
-
-
-
-
 let decomposition (m: t) =
   let (nrows, ncols) = shape m in
   if nrows <> ncols then
@@ -152,7 +148,6 @@ let decomposition (m: t) =
   done;
   (lu, perm, !toggle)
 
-
 let det m = 
   let (nrows, ncols) = shape m in
   if nrows <> ncols then
@@ -163,9 +158,6 @@ let det m =
     det := !det *. lu.(i).(i)
   done;
   !det 
-
-
-
 
 let solver lu b = 
   let (nrows,_ncols) = shape lu in 
@@ -204,10 +196,3 @@ let inverse m =
     Array.iteri (fun j v -> res.(j).(i) <- v) x
   ) (res);
   res;
-     
-
-(* determinant *)
-(* inverse, transpose *)
-(* matrixmult, vector mult, dot and cross product *)
-
-(* eigenvalues, eigenvectors  (might be optional )*)

@@ -21,6 +21,7 @@ let copy v =
 let print v=
   Array.iter (fun elem -> Printf.printf "%f " elem) v;
   print_newline ()
+
 let add v1 v2 = 
   if Array.length v1 <> Array.length v2 then
     raise (Invalid_argument "Vector.add: vectors must have the same size");
@@ -83,7 +84,3 @@ let variance v =
 
 let std v =
   sqrt (variance v)
-
-(* element operators *)
-(* scalars, norms *)
-(* max, min, argmax, argmin *)

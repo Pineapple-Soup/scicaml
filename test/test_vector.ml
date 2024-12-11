@@ -3,7 +3,6 @@ open Core.Vector
 
 
 (* Test Cases *)
-
 let test_create _ =
   let v = create 3 1.0 in
   assert_equal 3 (Array.length v);
@@ -112,8 +111,8 @@ let test_std _ =
   let v = [| -3.0; -2.0; -1.0; 0.0; 1.0; 2.0; 3.0 |] in
   assert_equal (2.0) (std v) ~printer:string_of_float
 
-(* Test Suite *)
 
+  (* Test Suite *)
 let test_suite = "Test Suite for Vector" >::: [
   "test_create" >:: test_create;
   "test_create_negative" >:: test_create_negative;

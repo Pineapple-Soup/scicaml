@@ -1,9 +1,8 @@
 open OUnit2
 open Core.Matrix
-(* open Core *)
+
 
 (* Test Cases *)
-
 let test_create _ =
   let m = create 2 2 1.0 in
   assert_equal 2 (Array.length m);
@@ -95,7 +94,6 @@ let test_append_vector _ =
   let m' = append_vector m v 1 in
   assert_equal (create 2 4 1.0) m'
 
-
 let test_vector_mult _ = 
   let m = [|[|1.0; 2.0; 3.0|]; [|4.0; 5.0; 6.0|]; [|7.0; 8.0; 9.0|]|] in
   let v = [|1.0; 2.0; 3.0|] in
@@ -139,8 +137,8 @@ let test_dot _ =
 let test_decomposition _ =
   let m = [|[|2.0;7.0;1.0|];[|3.0;-2.0;0.0|];[|1.0;5.0;3.0|]|] in
   let (lu, _perm, _toggle) = decomposition m in
+  let res = [|[|3.0;-2.0;0.0|];[|2.0/.3.0;25.0/.3.0;1.0|];[|1.0/.3.0;17.0/.25.0;2.32|]|] in
   (* print (lu); *)
-  let res = [|[|3.0;-2.0;0.0|];[|2.0/.3.0;25.0/.3.0;1.0|];[|1.0/.3.0;17.0/.25.0;2.32|]|]in
   (* print (res); *)
   (* assert_equal res lu *)
   assert_float_equal_matrix res lu
@@ -149,7 +147,7 @@ let test_solver _ =
   let m = [|[|7.0;0.7;0.43|];[|2.0;-0.4;-12.0|];[|1.0;1.3;18.0|]|] in 
   let b = [|1.0; 2.0; 3.0|] in
   let ans = [|0.4694;-10.0/.3.0;1.0/.9.0|] in
-  (* Vector.print (solver m b);
+  (* Vector.print (solver m b); 
   Vector.print ans; *)
   assert_float_equal_array ans (solver m b);
   assert_float_equal_array ans (solver m b)
@@ -162,6 +160,7 @@ let test_inverse _ =
   assert_float_equal_matrix res (inverse m);
   assert_float_equal_matrix res (inverse m)
 
+  
 (* Test Suite *)
 let test_suite = "Test Suite for Matrix" >::: [
   "test_create" >:: test_create;
